@@ -1,0 +1,17 @@
+{
+  "name": "bookkeeping-server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "better-sqlite3": "^11.0.0",
+    "cors": "^2.8.5",
+    "csv-stringify": "^6.5.0",
+    "exceljs": "^4.4.0",
+    "morgan": "^1.10.0"
+  }
+}

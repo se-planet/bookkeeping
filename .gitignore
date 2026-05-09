@@ -1,0 +1,11 @@
+node_modules/
+.expo/
+dist/
+server/data/*.db
+server/data/*.db-wal
+server/data/*.db-shm
+.env
+*.log
+.DS_Store
+.claude/
+*.csv

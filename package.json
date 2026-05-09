@@ -1,0 +1,7 @@
+{
+  "name": "bookkeeping-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal bookkeeping web app",
+  "workspaces": ["server"]
+}
