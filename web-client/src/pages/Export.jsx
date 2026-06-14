@@ -48,7 +48,7 @@ export default function Export() {
         </button>
 
         <button onClick={() => excelExport.mutate(params)} disabled={excelExport.isPending}
-          className="btn w-full py-3 text-white font-semibold" style={{background: 'linear-gradient(135deg, #10b981, #34d399)', boxShadow: '0 2px 8px rgba(16,185,129,0.3)'}}>
+          className="btn btn-excel w-full py-3">
           📊 {excelExport.isPending ? '导出中...' : '导出 Excel'}
         </button>
       </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCategories } from '../hooks/useCategories';
 import { useTransaction, useCreateTransaction, useUpdateTransaction } from '../hooks/useTransactions';
+import { useToast } from '../components/Toast';
 
 function getToday() {
   const d = new Date();
@@ -12,6 +13,7 @@ export default function TransactionForm() {
   const { id } = useParams();
   const isEdit = !!id;
   const navigate = useNavigate();
+  const toast = useToast();
 
   const { data: existing } = useTransaction(isEdit ? Number(id) : null);
 
@@ -50,12 +52,12 @@ export default function TransactionForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const numAmount = parseFloat(amount);
-    if (!numAmount || numAmount <= 0) return alert('请输入有效金额');
-    if (!categoryId) return alert('请选择分类');
+    if (!numAmount || numAmount <= 0) return toast('请输入有效金额', 'error');
+    if (!categoryId) return toast('请选择分类', 'error');
 
     const data = { type, amount: numAmount, category_id: Number(categoryId), sub_category: subCategory, note, date, payment_method: paymentMethod };
     const onSuccess = () => navigate('/transactions');
-    const onError = (err) => alert(err.response?.data?.error || '操作失败');
+    const onError = (err) => toast(err.response?.data?.error || '操作失败', 'error');
 
     if (isEdit) {
       updateTx.mutate({ id: Number(id), data }, { onSuccess, onError });
@@ -76,11 +78,16 @@ export default function TransactionForm() {
         </div>
 
         <div className="card text-center">
-          <label className="text-sm font-medium text-gray-400 mb-2 block">金额</label>
-          <div className="flex items-center justify-center text-4xl font-extrabold" style={{letterSpacing: '-1px'}}>
-            <span className="mr-1 text-gray-300">¥</span>
-            <input className="text-center outline-none" style={{width: '70%'}} value={amount} onChange={e => setAmount(e.target.value)}
-              type="number" step="0.01" min="0" placeholder="0.00" required />
+          <label className="text-sm font-semibold text-[var(--slate)] mb-3 block">金额</label>
+          <div className="flex items-center justify-center text-5xl font-extrabold" style={{letterSpacing: '-1.5px'}}>
+            <span className="mr-1.5 text-[var(--muted)] font-medium">¥</span>
+            <input
+              className="text-center outline-none bg-transparent font-extrabold tabular-nums"
+              style={{width: '65%', fontVariantNumeric: 'tabular-nums', letterSpacing: '-1.5px'}}
+              value={amount}
+              onChange={e => setAmount(e.target.value)}
+              type="number" step="0.01" min="0" placeholder="0.00" required
+            />
           </div>
         </div>
 

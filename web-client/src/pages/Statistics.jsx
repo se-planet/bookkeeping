@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useSummary, useByCategory, useMonthlyTrend } from '../hooks/useStatistics';
 import { formatCurrency } from '../utils';
+import StatCard from '../components/StatCard';
 
-const PIE_COLORS = ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd', '#f472b6', '#fb923c', '#fbbf24', '#34d399', '#60a5fa', '#f87171'];
+const PIE_COLORS = ['#4f5de4', '#0d9488', '#f59e0b', '#8b5cf6', '#e11d48', '#06b6d4', '#10b981', '#f97316', '#6366f1', '#ec4899'];
 
 export default function Statistics() {
   const [period, setPeriod] = useState('monthly');
@@ -26,32 +27,15 @@ export default function Statistics() {
       <h2 className="page-title">统计</h2>
 
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="stat-card income">
-          <div className="stat-label">总收入</div>
-          <div className="stat-value" style={{color: '#10b981'}}>
-            {summaryLoading ? '...' : formatCurrency(summary.total_income)}
-          </div>
-        </div>
-        <div className="stat-card expense">
-          <div className="stat-label">总支出</div>
-          <div className="stat-value" style={{color: '#ef4444'}}>
-            {summaryLoading ? '...' : formatCurrency(summary.total_expense)}
-          </div>
-        </div>
-        <div className="stat-card balance">
-          <div className="stat-label">结余</div>
-          <div className="stat-value" style={{color: summary.balance >= 0 ? '#10b981' : '#ef4444'}}>
-            {summaryLoading ? '...' : formatCurrency(summary.balance)}
-          </div>
-        </div>
+        <StatCard label="总收入" value={summaryLoading ? '...' : formatCurrency(summary.total_income)} variant="income" color="var(--income)" />
+        <StatCard label="总支出" value={summaryLoading ? '...' : formatCurrency(summary.total_expense)} variant="expense" color="var(--expense)" />
+        <StatCard label="结余" value={summaryLoading ? '...' : formatCurrency(summary.balance)} variant="balance" color={summary.balance >= 0 ? 'var(--income)' : 'var(--expense)'} />
       </div>
 
       <div className="flex items-center gap-4 mb-6">
-        <div className="type-toggle" style={{width: 'auto'}}>
-          <button onClick={() => setPeriod('monthly')}
-            className={`type-toggle-btn ${period === 'monthly' ? 'active-expense' : ''}`} style={{minWidth: '72px'}}>月度</button>
-          <button onClick={() => setPeriod('yearly')}
-            className={`type-toggle-btn ${period === 'yearly' ? 'active-expense' : ''}`} style={{minWidth: '72px'}}>年度</button>
+        <div className="flex gap-2">
+          <button onClick={() => setPeriod('monthly')} className={`filter-pill ${period === 'monthly' ? 'filter-pill-active' : ''}`}>月度</button>
+          <button onClick={() => setPeriod('yearly')} className={`filter-pill ${period === 'yearly' ? 'filter-pill-active' : ''}`}>年度</button>
         </div>
         {period === 'monthly' && (
           <div className="flex items-center gap-3 bg-white rounded-xl px-5 py-2.5 shadow-sm">
@@ -107,8 +91,8 @@ export default function Statistics() {
               <Tooltip formatter={(v) => formatCurrency(v)} labelFormatter={(m) => `${m}月`}
                 contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)'}} />
               <Legend formatter={(v) => v === 'income' ? '收入' : '支出'} />
-              <Bar dataKey="income" name="income" fill="#34d399" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="expense" name="expense" fill="#a78bfa" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="income" name="income" fill="#0d9488" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="expense" name="expense" fill="#e11d48" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

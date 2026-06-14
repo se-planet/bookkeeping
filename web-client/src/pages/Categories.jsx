@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useCategories, useCreateCategory, useUpdateCategory, useDeleteCategory } from '../hooks/useCategories';
+import { useToast } from '../components/Toast';
+import Modal from '../components/Modal';
 
 const EMOJIS = ['🍔', '🚌', '🛍️', '🎮', '🏠', '💡', '🏥', '📚', '💸', '💰', '💻', '📈', '🎁', '💵', '🐾', '✈️', '📱', '🏋️', '🎬', '☕'];
 const COLORS = ['#EF4444', '#F97316', '#EAB308', '#22C55E', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6', '#6B7280', '#F59E0B'];
@@ -12,6 +14,7 @@ export default function Categories() {
   const [formType, setFormType] = useState('expense');
   const [formIcon, setFormIcon] = useState('📦');
   const [formColor, setFormColor] = useState('#6B7280');
+  const toast = useToast();
 
   const { data } = useCategories(tab);
   const createCat = useCreateCategory();
@@ -40,10 +43,10 @@ export default function Categories() {
 
   const handleSave = (e) => {
     e.preventDefault();
-    if (!formName.trim()) return alert('请输入分类名称');
+    if (!formName.trim()) return toast('请输入分类名称', 'error');
     const data = { name: formName.trim(), type: formType, icon: formIcon, color: formColor };
     const onSuccess = () => setShowForm(false);
-    const onError = (err) => alert(err.response?.data?.error || '操作失败');
+    const onError = (err) => toast(err.response?.data?.error || '操作失败', 'error');
     if (editing) {
       updateCat.mutate({ id: editing.id, data }, { onSuccess, onError });
     } else {
@@ -52,7 +55,7 @@ export default function Categories() {
   };
 
   const handleDelete = (cat) => {
-    if (cat.is_default) return alert('默认分类不可删除');
+    if (cat.is_default) return toast('默认分类不可删除', 'error');
     if (confirm(`确定删除「${cat.name}」？`)) deleteCat.mutate(cat.id);
   };
 
@@ -86,48 +89,43 @@ export default function Categories() {
         ))}
       </div>
 
-      {showForm && (
-        <div className="modal-backdrop" onClick={() => setShowForm(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h3 className="text-lg font-bold mb-5">{editing ? '编辑分类' : '新增分类'}</h3>
-            <form onSubmit={handleSave} className="space-y-4">
-              {!editing && (
-                <div className="type-toggle">
-                  <button type="button" onClick={() => setFormType('expense')}
-                    className={`type-toggle-btn ${formType === 'expense' ? 'active-expense' : ''}`}>支出</button>
-                  <button type="button" onClick={() => setFormType('income')}
-                    className={`type-toggle-btn ${formType === 'income' ? 'active-income' : ''}`}>收入</button>
-                </div>
-              )}
-              <input value={formName} onChange={e => setFormName(e.target.value)}
-                placeholder="分类名称" maxLength={30} autoFocus />
-              <div>
-                <div className="text-sm text-gray-400 mb-2 font-medium">图标</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {EMOJIS.map(em => (
-                    <button key={em} type="button" onClick={() => setFormIcon(em)}
-                      className={`w-10 h-10 flex items-center justify-center rounded-xl text-lg transition-all ${em === formIcon ? 'bg-indigo-50 ring-2 ring-primary scale-110' : 'hover:bg-gray-100'}`}>{em}</button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-400 mb-2 font-medium">颜色</div>
-                <div className="flex gap-2.5">
-                  {COLORS.map(c => (
-                    <button key={c} type="button" onClick={() => setFormColor(c)}
-                      className={`w-9 h-9 rounded-full transition-all ${c === formColor ? 'ring-2 ring-offset-2 ring-primary scale-110' : 'hover:scale-105'}`}
-                      style={{ backgroundColor: c }} />
-                  ))}
-                </div>
-              </div>
-              <div className="flex gap-3 pt-2">
-                <button type="submit" className="btn btn-primary flex-1">保存</button>
-                <button type="button" onClick={() => setShowForm(false)} className="btn btn-ghost flex-1">取消</button>
-              </div>
-            </form>
+      <Modal open={showForm} onClose={() => setShowForm(false)} title={editing ? '编辑分类' : '新增分类'}>
+        <form onSubmit={handleSave} className="space-y-4">
+          {!editing && (
+            <div className="type-toggle">
+              <button type="button" onClick={() => setFormType('expense')}
+                className={`type-toggle-btn ${formType === 'expense' ? 'active-expense' : ''}`}>支出</button>
+              <button type="button" onClick={() => setFormType('income')}
+                className={`type-toggle-btn ${formType === 'income' ? 'active-income' : ''}`}>收入</button>
+            </div>
+          )}
+          <input value={formName} onChange={e => setFormName(e.target.value)}
+            placeholder="分类名称" maxLength={30} autoFocus />
+          <div>
+            <div className="text-sm text-gray-400 mb-2 font-medium">图标</div>
+            <div className="flex flex-wrap gap-1.5">
+              {EMOJIS.map(em => (
+                <button key={em} type="button" onClick={() => setFormIcon(em)}
+                  className={`w-10 h-10 flex items-center justify-center rounded-xl text-lg transition-all ${em === formIcon ? 'bg-indigo-50 ring-2 ring-primary scale-110' : 'hover:bg-gray-100'}`}>{em}</button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+          <div>
+            <div className="text-sm text-gray-400 mb-2 font-medium">颜色</div>
+            <div className="flex gap-2.5">
+              {COLORS.map(c => (
+                <button key={c} type="button" onClick={() => setFormColor(c)}
+                  className={`w-9 h-9 rounded-full transition-all ${c === formColor ? 'ring-2 ring-offset-2 ring-primary scale-110' : 'hover:scale-105'}`}
+                  style={{ backgroundColor: c }} />
+              ))}
+            </div>
+          </div>
+          <div className="flex gap-3 pt-2">
+            <button type="submit" className="btn btn-primary flex-1">保存</button>
+            <button type="button" onClick={() => setShowForm(false)} className="btn btn-ghost flex-1">取消</button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

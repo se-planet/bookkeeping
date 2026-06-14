@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTransactions, useDeleteTransaction } from '../hooks/useTransactions';
-import { formatCurrency, formatDate } from '../utils';
+import Skeleton from '../components/Skeleton';
+import TransactionItem from '../components/TransactionItem';
 
 export default function Transactions() {
   const [search, setSearch] = useState('');
@@ -50,18 +51,7 @@ export default function Transactions() {
       </div>
 
       {isLoading ? (
-        <div className="card" style={{padding: 0, overflow: 'hidden'}}>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="tx-item animate-pulse">
-              <div className="w-10 h-10 rounded-full bg-gray-100 mr-4" />
-              <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gray-100 rounded w-24" />
-                <div className="h-3 bg-gray-50 rounded w-32" />
-              </div>
-              <div className="h-4 bg-gray-100 rounded w-20" />
-            </div>
-          ))}
-        </div>
+        <Skeleton lines={5} />
       ) : isError ? (
         <div className="empty-state">
           <div className="empty-state-icon">⚠️</div>
@@ -76,36 +66,19 @@ export default function Transactions() {
         <>
           <div className="card" style={{padding: 0, overflow: 'hidden'}}>
             {transactions.map(t => (
-              <div key={t.id} className="tx-item group">
-                <span className="text-2xl mr-4">{t.category_icon || '📦'}</span>
-                <div className="flex-1">
-                  <div className="font-medium text-[15px]">
-                    {t.category_name}
-                    {t.sub_category && <span className="text-gray-400 text-xs ml-1">·{t.sub_category}</span>}
-                    {t.payment_method && (
-                      <span className={`payment-badge ml-1.5 ${t.payment_method === '微信' ? 'payment-wechat' : t.payment_method === '支付宝' ? 'payment-alipay' : t.payment_method === '银行卡' ? 'payment-card' : 'payment-cash'}`}>
-                        {t.payment_method}
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-sm text-gray-400 mt-0.5">{t.note || formatDate(t.date)}</div>
-                </div>
-                <div className={`font-semibold text-[15px] mr-4 ${t.type === 'income' ? 'text-green-600' : 'text-red-500'}`}>
-                  {formatCurrency(t.type === 'income' ? t.amount : -t.amount)}
-                </div>
-                <Link to={`/transactions/${t.id}/edit`} className="text-gray-300 hover:text-blue-500 mr-3 opacity-0 group-hover:opacity-100 transition-all text-sm font-medium">编辑</Link>
-                <button onClick={() => handleDelete(t.id)} className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all text-sm font-medium">删除</button>
-              </div>
+              <TransactionItem key={t.id} transaction={t} showActions onDelete={handleDelete} />
             ))}
           </div>
 
           {pagination && page < pagination.totalPages && (
-            <button onClick={() => setPage(p => p + 1)} className="w-full mt-4 py-3 text-primary font-medium hover:bg-white rounded-xl transition-all border border-dashed border-[#e8ecf1]">
+            <button onClick={() => setPage(p => p + 1)} className="load-more-btn">
               加载更多
             </button>
           )}
         </>
       )}
+
+      <Link to="/transactions/new" className="fab">+</Link>
     </div>
   );
 }

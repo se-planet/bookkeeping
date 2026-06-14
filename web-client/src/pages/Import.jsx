@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { importCSV } from '../api/import';
 
 export default function Import() {
-  const [filePath, setFilePath] = useState('/Users/qingxuly/Documents/Code/CC01/苏打水_20260508_131143.csv');
+  const [filePath, setFilePath] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
