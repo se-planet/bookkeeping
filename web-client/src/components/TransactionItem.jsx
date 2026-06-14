@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { formatCurrency, formatDate } from '../utils';
+import { formatCurrency, formatDate } from '../utils/format';
 
 const PAYMENT_CLASS = {
   '微信': 'payment-wechat',

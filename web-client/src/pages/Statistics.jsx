@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useSummary, useByCategory, useMonthlyTrend } from '../hooks/useStatistics';
-import { formatCurrency } from '../utils';
+import { formatCurrency } from '../utils/format';
 import StatCard from '../components/StatCard';
 
 const PIE_COLORS = ['#4f5de4', '#0d9488', '#f59e0b', '#8b5cf6', '#e11d48', '#06b6d4', '#10b981', '#f97316', '#6366f1', '#ec4899'];

@@ -14,8 +14,3 @@ export function formatDate(dateString) {
   if (isNaN(m) || isNaN(d)) return dateString;
   return `${m}月${d}日`;
 }
-
-export function formatAmount(amount) {
-  if (amount == null || isNaN(amount)) return '0.00';
-  return amount.toFixed(2);
-}

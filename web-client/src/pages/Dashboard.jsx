@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSummary } from '../hooks/useStatistics';
 import { useTransactions } from '../hooks/useTransactions';
-import { formatCurrency } from '../utils';
+import { formatCurrency } from '../utils/format';
 import StatCard from '../components/StatCard';
 import Skeleton from '../components/Skeleton';
 import TransactionItem from '../components/TransactionItem';

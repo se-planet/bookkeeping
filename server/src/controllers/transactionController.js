@@ -1,5 +1,5 @@
-const { Transaction } = require('../models/Transaction');
-const { Category } = require('../models/Category');
+const { Transaction } = require('../models/transaction');
+const { Category } = require('../models/category');
 
 const transactionController = {
   getAll(req, res) {

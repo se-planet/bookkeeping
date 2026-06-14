@@ -1,4 +1,4 @@
-const { Statistics } = require('../models/Statistics');
+const { Statistics } = require('../models/statistics');
 
 const statisticsController = {
   summary(req, res) {

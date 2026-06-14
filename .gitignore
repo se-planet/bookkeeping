@@ -8,4 +8,5 @@ server/data/*.db-shm
 *.log
 .DS_Store
 .claude/
+memory/
 *.csv
