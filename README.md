@@ -1,6 +1,6 @@
-# 记账本
+# 🤖 记账本
 
-个人财务管理 Web 应用，支持收支记录、分类管理、统计图表、数据导入导出。
+> Claude Code 全栈构建的个人财务管理应用 — React + Express + SQLite
 
 ## 功能
 
@@ -21,7 +21,7 @@
 ## 项目结构
 
 ```
-bookkeeping/
+claude-bookkeeper/
 ├── server/                 # 后端
 │   └── src/
 │       ├── index.js        # 入口
@@ -65,12 +65,10 @@ npm run dev
 
 ### 3. 导入数据（可选）
 
-将 CSV 文件放在服务器可访问的路径，然后通过前端「导入」页面输入文件路径，或使用 API：
-
 ```bash
 curl -X POST http://localhost:3000/api/import/csv \
-  -H 'Content-Type: application/json' \
-  -d '{"filePath":"/path/to/data.csv"}'
+  -H "Content-Type: application/json" \
+  -d "{\"filePath\":\"/path/to/data.csv\"}"
 ```
 
 支持 CSV 格式：`时间,日期,类型,分类,子分类,金额,备注,标签,卡券`
@@ -81,7 +79,7 @@ curl -X POST http://localhost:3000/api/import/csv \
 |------|------|------|
 | GET/POST | `/api/categories` | 分类列表 / 创建 |
 | PUT/DELETE | `/api/categories/:id` | 更新 / 删除分类 |
-| GET/POST | `/api/transactions` | 记录列表(分页+筛选+搜索) / 创建 |
+| GET/POST | `/api/transactions` | 记录列表 / 创建 |
 | GET/PUT/DELETE | `/api/transactions/:id` | 单个记录 CRUD |
 | GET | `/api/statistics/summary` | 收支总览 |
 | GET | `/api/statistics/by-category` | 分类占比 |
